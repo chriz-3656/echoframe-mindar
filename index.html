@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EchoFrame</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+  <!-- MindAR (Image Tracking) -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: system-ui, sans-serif;
+    }
+
+    #ui {
+      position: fixed;
+      bottom: 16px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      z-index: 10;
+      text-shadow: 0 0 6px black;
+      pointer-events: none;
+    }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+      z-index: 20;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Loading overlay -->
+<div id="loader">Loading EchoFrame…</div>
+
+<!-- Hint text -->
+<div id="ui">📸 Point your camera at the EchoFrame photo</div>
+
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind;"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+  renderer="antialias: true; alpha: true;"
+>
+
+  <!-- Assets -->
+  <a-assets>
+    <video
+      id="memoryVideo"
+      src="assets/memory.mp4"
+      preload="auto"
+      loop
+      playsinline
+      webkit-playsinline
+      crossorigin="anonymous"
+    ></video>
+  </a-assets>
+
+  <!-- Camera -->
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false"
+  ></a-camera>
+
+  <!-- Image Target -->
+  <a-entity mindar-image-target="targetIndex: 0">
+
+    <!-- Video overlay (match your photo aspect ratio) -->
+    <a-video
+      src="#memoryVideo"
+      width="1.1"
+      height="1.1"
+      position="0 0 0"
+    ></a-video>
+
+  </a-entity>
+
+</a-scene>
+
+<script>
+  const video = document.getElementById("memoryVideo");
+  const loader = document.getElementById("loader");
+  const scene = document.querySelector("a-scene");
+
+  // Hide loader when AR is ready
+  scene.addEventListener("renderstart", () => {
+    loader.style.display = "none";
+  });
+
+  // Play video when photo is detected
+  scene.addEventListener("targetFound", () => {
+    video.play();
+  });
+
+  // Pause when photo is lost
+  scene.addEventListener("targetLost", () => {
+    video.pause();
+  });
+</script>
+
+</body>
+</html>
