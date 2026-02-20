@@ -46,10 +46,15 @@ This makes it ideal for interactive marketing, promotions, and demos.
 
 echoframe-mindar/
 │
+
 ├── assets/
+
 │   └── memory.mp4
+
 ├── index.html
+
 ├── targets.mind
+
 └── README.md
 
 ---
